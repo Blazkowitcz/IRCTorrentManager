@@ -4,12 +4,12 @@ import org.jibble.pircbot.*;
 
 public class MyBot extends PircBot
 {
-	public Torrent torrent;
+	public TorrentManager torrent;
 	public Commands commands;
 	public MyBot() 
 	{
 		this.setName("HyperBot");
-		torrent = new Torrent(this);
+		torrent = new TorrentManager(this);
 		commands = new Commands(this);
 	}
 	
@@ -29,6 +29,6 @@ public class MyBot extends PircBot
 	
 	public void SendMessage(String message) 
 	{
-		sendMessage("#botJacky", ": The time is now " + message);
+		sendMessage("#botJacky", message);
 	}
 }
