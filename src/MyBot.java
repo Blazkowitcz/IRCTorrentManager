@@ -6,11 +6,13 @@ public class MyBot extends PircBot
 {
 	public TorrentManager torrent;
 	public Commands commands;
+	public ConfigurationManager configurationManager;
 	public MyBot() 
 	{
 		this.setName("HyperBot");
 		torrent = new TorrentManager(this);
 		commands = new Commands(this);
+		configurationManager = new ConfigurationManager();
 	}
 	
 	public void onMessage(String channel, String sender, String login, String hostname, String message) 

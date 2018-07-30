@@ -1,9 +1,13 @@
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -25,11 +29,31 @@ public class TorrentManager
 	
 	public void TorrentCommand(String command) throws IOException 
 	{
-		Connect();
+		
 		String arr[] = command.split(" ");
 		if(arr[1].equals("search") && arr[2] != "") 
 		{
+			Connect();
 			RetrieveTorrents(arr[2].replace(" ", "+"));
+		}
+		if(arr[1].equals("set-conf") && arr[2] != "") 
+		{
+			if(arr[2].equals("login") && arr[3] != null) 
+			{
+				myBot.configurationManager.SetYggtorrentInformations("yggLogin", arr[3]);
+			}
+			if(arr[2].equals("password") && arr[3] != null) 
+			{
+				myBot.configurationManager.SetYggtorrentInformations("yggPassword", arr[3]);
+			}
+			if(arr[2].equals("path") && arr[3] != null) 
+			{
+				myBot.configurationManager.SetYggtorrentInformations("saveTorrentPath", arr[3]);
+			}
+			if(arr[2].equals("create")) 
+			{
+				myBot.configurationManager.CreateConfFile();
+			}
 		}
 		ShowTorrent();
 	}
@@ -119,4 +143,8 @@ public class TorrentManager
 			myBot.SendMessage(tor.Name + " [" + tor.Taille + "] [" + tor.Seed + "] [" + tor.Leech + "]");
 		}
 	}
+	
+	
+	
+	
 }
