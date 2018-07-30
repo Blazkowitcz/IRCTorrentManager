@@ -54,6 +54,10 @@ public class TorrentManager
 			{
 				myBot.configurationManager.CreateConfFile();
 			}
+			if(arr[2].equals("listmax") && arr[3] != null) 
+			{
+				myBot.configurationManager.SetYggtorrentInformations("listMax", arr[3]);
+			}
 		}
 		ShowTorrent();
 	}
@@ -63,7 +67,7 @@ public class TorrentManager
 		try {
 			
 			Response res = Jsoup.connect("https://ww2.yggtorrent.is/user/login")
-				.data("id", "Morsang", "pass", "morsang66")
+				.data("id", myBot.configurationManager.GetYggtorrentInformation("yggLogin"), "pass", myBot.configurationManager.GetYggtorrentInformation("yggPassword"))
 				.method(Method.POST)
 				.execute();
 			
@@ -138,9 +142,14 @@ public class TorrentManager
 	
 	public void ShowTorrent() 
 	{
+		int index = 0;
 		for(Torrent tor : listTorrent) 
 		{
-			myBot.SendMessage(tor.Name + " [" + tor.Taille + "] [" + tor.Seed + "] [" + tor.Leech + "]");
+			if(index < Integer.parseInt(myBot.configurationManager.GetYggtorrentInformation("listMax"))) 
+			{
+				myBot.SendMessage(tor.Name + " [" + tor.Taille + "] [" + tor.Seed + "] [" + tor.Leech + "]");
+				index ++;
+			}
 		}
 	}
 	

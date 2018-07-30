@@ -6,6 +6,12 @@ import java.util.Properties;
 
 public class ConfigurationManager 
 {
+	MyBot myBot;
+	
+	public ConfigurationManager(MyBot myBot)
+	{
+		this.myBot = myBot;
+	}
 	public void CreateConfFile() throws IOException 
 	{
 		File configFile = new File("config.properties");
@@ -30,9 +36,28 @@ public class ConfigurationManager
 			props.setProperty(type, value);
 			FileWriter writer = new FileWriter(configFile);
 			props.store(writer, "host settings");
+			myBot.SendMessage("Conf updated !");
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public String GetYggtorrentInformation(String type) 
+	{
+		try 
+		{
+			File configFile = new File("config.properties");
+			FileReader reader = new FileReader(configFile);
+			Properties props = new Properties();
+			props.load(reader);
+			return props.getProperty(type);
+		}
+		catch(IOException e) 
+		{
+			
+		}
+		return null;
 	}
 }

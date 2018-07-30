@@ -12,7 +12,7 @@ public class MyBot extends PircBot
 		this.setName("HyperBot");
 		torrent = new TorrentManager(this);
 		commands = new Commands(this);
-		configurationManager = new ConfigurationManager();
+		configurationManager = new ConfigurationManager(this);
 	}
 	
 	public void onMessage(String channel, String sender, String login, String hostname, String message) 
