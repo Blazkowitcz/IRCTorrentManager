@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -35,6 +36,15 @@ public class TorrentManager
 		{
 			Connect();
 			RetrieveTorrents(arr[2].replace(" ", "+"));
+			if(arr.length == 4 && arr[3] != "") 
+			{
+				Filter(arr[3]);
+			}
+			ShowTorrent();
+		}
+		if(arr[1].equals("download") && arr[2] != "") 
+		{
+			DownloadTorrentFile(listTorrent.get(Integer.parseInt(arr[2])));
 		}
 		if(arr[1].equals("set-conf") && arr[2] != "") 
 		{
@@ -59,7 +69,6 @@ public class TorrentManager
 				myBot.configurationManager.SetYggtorrentInformations("listMax", arr[3]);
 			}
 		}
-		ShowTorrent();
 	}
 	
 	public void Connect() 
@@ -80,20 +89,34 @@ public class TorrentManager
 		}
 	}
 	
-	public void DownloadTorrentFile(String idTorrent) 
+	public void DownloadTorrentFile(Torrent torrent) 
 	{
 		Response resultImageResponse;
 		try {
-			resultImageResponse = Jsoup.connect("https://ww2.yggtorrent.is/engine/download_torrent?id=" + idTorrent)
-			        .referrer("https://ww2.yggtorrent.is/engine/download_torrent?id=" + idTorrent)
+			resultImageResponse = Jsoup.connect("https://ww2.yggtorrent.is/engine/download_torrent?id=" + torrent.Id)
+			        .referrer("https://ww2.yggtorrent.is/engine/download_torrent?id=" + torrent.Id)
 			        .cookies(cookies)
 			        .ignoreContentType(true)
 			        .execute();
-			FileOutputStream out = (new FileOutputStream(new java.io.File("toto66.torrent")));
+			FileOutputStream out = (new FileOutputStream(new java.io.File(torrent.Name + ".torrent")));
 		    out.write(resultImageResponse.bodyAsBytes());
 		    out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void Filter(String filter) 
+	{
+		
+		Iterator<Torrent> iter = listTorrent.iterator();
+		while(iter.hasNext()) 
+		{
+			Torrent t = iter.next();
+			if(!t.Name.contains(filter)) 
+			{
+				iter.remove();
+			}
 		}
 	}
 	
@@ -145,9 +168,9 @@ public class TorrentManager
 		int index = 0;
 		for(Torrent tor : listTorrent) 
 		{
-			if(index < Integer.parseInt(myBot.configurationManager.GetYggtorrentInformation("listMax"))) 
+			if(index <= Integer.parseInt(myBot.configurationManager.GetYggtorrentInformation("listMax"))) 
 			{
-				myBot.SendMessage(tor.Name + " [" + tor.Taille + "] [" + tor.Seed + "] [" + tor.Leech + "]");
+				myBot.SendMessage("[" + listTorrent.indexOf(tor)+ "] " + tor.Name + " [" + tor.Taille + "] [S:" + tor.Seed + "] [L:" + tor.Leech + "]");
 				index ++;
 			}
 		}
